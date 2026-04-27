@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio
 
-## Getting Started
+Next.js 15 + Prisma + NextAuth portfolio CMS with admin panel and gallery.
 
-First, run the development server:
+## Local development
 
 ```bash
+npm install
+cp .env.example .env   # then fill in real values
+npm run db:seed        # creates admin user + initial sections
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 — admin panel at `/admin/login`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploying to Vercel + Neon
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This app needs Postgres. Free tier of Neon + Vercel covers it.
 
-## Learn More
+### 1. Create a Neon Postgres database
+1. Go to https://neon.tech and sign up with GitHub
+2. Create a new project (any region close to you)
+3. Copy the **connection string** (starts with `postgresql://...?sslmode=require`)
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Import the repo on Vercel
+1. Go to https://vercel.com and sign up with GitHub
+2. **Import Project** → pick `aizenshaikh/portfolio-web`
+3. Framework preset: **Next.js** (auto-detected)
+4. **Root Directory**: leave as repo root
+5. Add Environment Variables (all five):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Name              | Value                                                              |
+|-------------------|--------------------------------------------------------------------|
+| `DATABASE_URL`    | (paste the Neon connection string)                                 |
+| `NEXTAUTH_SECRET` | (run `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`) |
+| `NEXTAUTH_URL`    | `https://<your-vercel-url>.vercel.app` (set after first deploy)    |
+| `ADMIN_EMAIL`     | your email                                                         |
+| `ADMIN_PASSWORD`  | a strong password                                                  |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+6. Click **Deploy** — first build runs `prisma db push` which creates all tables in Neon.
 
-## Deploy on Vercel
+### 3. Seed the admin user (one-time)
+After the first deploy, run locally to create the admin user in Neon:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+DATABASE_URL="<neon-url>" \
+ADMIN_EMAIL="<your-email>" \
+ADMIN_PASSWORD="<your-password>" \
+npm run db:seed
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. Update `NEXTAUTH_URL`
+Once Vercel gives you the live URL, update `NEXTAUTH_URL` in Vercel project settings to match it, then redeploy. Otherwise admin login will fail.
+
+## Known limitations on Vercel
+
+- **Uploads via admin panel are ephemeral** — `public/uploads/` is wiped on every deploy. For production media, switch to Vercel Blob, Cloudinary, or S3 (in `src/app/api/media/route.ts`).
