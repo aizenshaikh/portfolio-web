@@ -1,0 +1,108 @@
+// Portfolio CMS schema (SQLite)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Section {
+  id        String         @id @default(cuid())
+  type      String
+  order     Int            @default(0)
+  isVisible Boolean        @default(true)
+  blocks    ContentBlock[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([order])
+}
+
+model ContentBlock {
+  id        String   @id @default(cuid())
+  sectionId String
+  section   Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  key       String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([sectionId, key])
+}
+
+model ThemeSettings {
+  id        String   @id @default(cuid())
+  colors    String
+  fonts     String
+  spacing   String
+  updatedAt DateTime @updatedAt
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String   @default("")
+  type      String   @default("image")
+  createdAt DateTime @default(now())
+}
+
+model GallerySkill {
+  id          String        @id @default(cuid())
+  key         String        @unique
+  label       String
+  icon        String
+  color       String
+  bg          String
+  order       Int           @default(0)
+  emptyCount  Int           @default(0)
+  isVisible   Boolean       @default(true)
+  works       GalleryWork[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([order])
+}
+
+model GalleryWork {
+  id        String       @id @default(cuid())
+  skillId   String
+  skill     GallerySkill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  title     String
+  type      String
+  result    String       @default("")
+  year      String       @default("")
+  desc      String       @default("")
+  thumbUrl  String       @default("")
+  videoUrl  String       @default("")
+  order     Int          @default(0)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([skillId, order])
+}
+
+model GalleryPage {
+  id          String   @id @default(cuid())
+  eyebrow     String   @default("")
+  titleLine1  String   @default("")
+  titleLine2  String   @default("")
+  titleLine3  String   @default("")
+  description String   @default("")
+  bannerTitle String   @default("")
+  bannerSub   String   @default("")
+  bannerCta   String   @default("")
+  bannerHref  String   @default("")
+  updatedAt   DateTime @updatedAt
+}

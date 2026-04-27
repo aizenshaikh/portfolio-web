@@ -22,7 +22,12 @@
 
 # misc
 .DS_Store
+._*
 *.pem
+
+# local databases
+prisma/*.db
+prisma/*.db-journal
 
 # debug
 npm-debug.log*
