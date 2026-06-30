@@ -60,15 +60,21 @@ export async function updateAllBlocks(
       throw new Error(`Invalid JSON in block "${b.key}"`);
     }
   }
-  await prisma.$transaction(
-    blocks.map((b) =>
+  const keys = blocks.map((b) => b.key);
+  await prisma.$transaction([
+    // Delete blocks that were removed in the editor
+    prisma.contentBlock.deleteMany({
+      where: { sectionId, key: { notIn: keys } },
+    }),
+    // Upsert remaining blocks
+    ...blocks.map((b) =>
       prisma.contentBlock.upsert({
         where: { sectionId_key: { sectionId, key: b.key } },
         update: { value: b.value },
         create: { sectionId, key: b.key, value: b.value },
       })
-    )
-  );
+    ),
+  ]);
   revalidatePath("/");
   revalidatePath(`/admin/sections/${sectionId}`);
 }

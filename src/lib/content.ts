@@ -15,19 +15,44 @@ export async function getSections() {
   }));
 }
 
+const DEFAULT_THEME = {
+  colors: {
+    bg: "#060606",
+    bg2: "#0f0f0f",
+    bg3: "#1a1a1a",
+    accent: "#F5A623",
+    accent2: "#FF5C35",
+    white: "#F5F0E8",
+    grey: "#888888",
+    grey2: "#555555",
+    border: "rgba(255,255,255,0.06)",
+  },
+  fonts: {
+    head: "'Bebas Neue', sans-serif",
+    body: "'Inter', sans-serif",
+    sub: "'DM Sans', sans-serif",
+  },
+  spacing: {
+    "section-padding": "100px 5%",
+    radius: "12px",
+  },
+};
+
 export async function getTheme() {
   const t = await prisma.themeSettings.findFirst();
   if (!t) {
-    return {
-      colors: {} as Record<string, string>,
-      fonts: {} as Record<string, string>,
-      spacing: {} as Record<string, string>,
-    };
+    return DEFAULT_THEME;
   }
-  return {
+  const saved = {
     colors: JSON.parse(t.colors) as Record<string, string>,
     fonts: JSON.parse(t.fonts) as Record<string, string>,
     spacing: JSON.parse(t.spacing) as Record<string, string>,
+  };
+  // Merge defaults so newly added keys appear even for existing themes
+  return {
+    colors: { ...DEFAULT_THEME.colors, ...saved.colors },
+    fonts: { ...DEFAULT_THEME.fonts, ...saved.fonts },
+    spacing: { ...DEFAULT_THEME.spacing, ...saved.spacing },
   };
 }
 

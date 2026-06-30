@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { put } from "@vercel/blob";
+import { put, del } from "@vercel/blob";
 import path from "node:path";
 import crypto from "node:crypto";
 
@@ -52,6 +52,14 @@ export async function DELETE(req: NextRequest) {
   }
   const { id } = await req.json();
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  const media = await prisma.media.findUnique({ where: { id } });
+  if (!media) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  // Delete from Vercel Blob storage first, then DB record
+  try {
+    await del(media.url);
+  } catch {
+    // Blob may not exist (e.g. external URL) — continue with DB delete
+  }
   await prisma.media.delete({ where: { id } });
   return NextResponse.json({ ok: true });
 }

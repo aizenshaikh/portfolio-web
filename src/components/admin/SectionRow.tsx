@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   toggleSectionVisibility,
   moveSection,
@@ -25,6 +26,7 @@ export default function SectionRow({
   isLast,
 }: Props) {
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
   return (
     <div className="admin-card">
       <div className="admin-row">
@@ -40,7 +42,12 @@ export default function SectionRow({
           <button
             className="admin-btn admin-btn-secondary"
             disabled={isFirst || pending}
-            onClick={() => startTransition(() => moveSection(id, "up"))}
+            onClick={() =>
+              startTransition(async () => {
+                await moveSection(id, "up");
+                router.refresh();
+              })
+            }
             aria-label="Move up"
           >
             ↑
@@ -48,7 +55,12 @@ export default function SectionRow({
           <button
             className="admin-btn admin-btn-secondary"
             disabled={isLast || pending}
-            onClick={() => startTransition(() => moveSection(id, "down"))}
+            onClick={() =>
+              startTransition(async () => {
+                await moveSection(id, "down");
+                router.refresh();
+              })
+            }
             aria-label="Move down"
           >
             ↓
@@ -56,7 +68,10 @@ export default function SectionRow({
           <button
             className={`admin-toggle${isVisible ? " on" : ""}`}
             onClick={() =>
-              startTransition(() => toggleSectionVisibility(id, !isVisible))
+              startTransition(async () => {
+                await toggleSectionVisibility(id, !isVisible);
+                router.refresh();
+              })
             }
             aria-label="Toggle visibility"
           />
@@ -67,7 +82,10 @@ export default function SectionRow({
             className="admin-btn admin-btn-danger"
             onClick={() => {
               if (confirm(`Delete section "${type}"?`))
-                startTransition(() => deleteSection(id));
+                startTransition(async () => {
+                  await deleteSection(id);
+                  router.refresh();
+                });
             }}
           >
             Delete

@@ -34,7 +34,7 @@ export default function MediaManager({ items }: { items: Item[] }) {
   }
 
   async function onDelete(id: string) {
-    if (!confirm("Delete this media item? (the file on disk will remain)")) return;
+    if (!confirm("Delete this media item? This will remove it from storage and cannot be undone.")) return;
     const res = await fetch("/api/media", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
