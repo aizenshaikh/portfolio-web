@@ -19,6 +19,11 @@ const PROVIDER_LABELS: Record<string, string> = {
   wistia: "Wistia",
   drive: "Google Drive",
   dropbox: "Dropbox",
+  instagram: "Instagram",
+  facebook: "Facebook",
+  tiktok: "TikTok",
+  dailymotion: "Dailymotion",
+  twitch: "Twitch",
   direct: "Direct video",
 };
 
@@ -40,7 +45,12 @@ export default function MediaFields({
     video.provider === "loom" ||
     video.provider === "streamable" ||
     video.provider === "wistia" ||
-    video.provider === "drive";
+    video.provider === "drive" ||
+    video.provider === "instagram" ||
+    video.provider === "facebook" ||
+    video.provider === "tiktok" ||
+    video.provider === "dailymotion" ||
+    video.provider === "twitch";
 
   const isDirectVideo = video.provider === "direct" || video.provider === "dropbox";
 
@@ -53,7 +63,7 @@ export default function MediaFields({
             className="admin-input"
             value={videoUrl}
             onChange={(e) => onVideoChange(e.target.value)}
-            placeholder="YouTube, Vimeo, Loom, Drive, Dropbox, .mp4 …"
+            placeholder="YouTube, Instagram, Facebook, TikTok, Vimeo, Drive, .mp4 …"
           />
           <button
             type="button"
@@ -75,13 +85,14 @@ export default function MediaFields({
             <span style={{ color: "#ff7070" }}>
               ⚠ Not a recognized video URL.
               <br />
-              Supported: YouTube, Vimeo, Loom, Streamable, Wistia, Google Drive
-              (file/d/…), Dropbox direct video, or any .mp4/.webm/.mov URL.
+              Supported: YouTube, Instagram (post/reel), Facebook, TikTok,
+              Dailymotion, Twitch, Vimeo, Loom, Streamable, Wistia, Google
+              Drive (file/d/…), Dropbox, or any .mp4/.webm/.mov URL.
             </span>
           ) : (
             <span>
-              Paste a YouTube / Vimeo / Loom / Drive link, or click 📁 to pick from
-              your uploaded library.
+              Paste a YouTube, Instagram, Facebook, TikTok, Vimeo, Drive link,
+              or click 📁 to pick from your uploaded library.
             </span>
           )}
         </div>

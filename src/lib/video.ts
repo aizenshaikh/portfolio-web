@@ -6,6 +6,11 @@ export type VideoProvider =
   | "wistia"
   | "drive"
   | "dropbox"
+  | "instagram"
+  | "facebook"
+  | "tiktok"
+  | "dailymotion"
+  | "twitch"
   | "direct"
   | null;
 
@@ -140,6 +145,93 @@ export function parseVideoUrl(url: string | null | undefined): VideoInfo {
     }
   }
 
+  // ── Instagram ────────────────────────────────────────────────────
+  // instagram.com/p/CODE, instagram.com/reel/CODE, instagram.com/tv/CODE
+  const ig = u.match(/instagram\.com\/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/);
+  if (ig) {
+    const code = ig[1];
+    const type = u.includes("/reel/") ? "reel" : u.includes("/tv/") ? "tv" : "p";
+    return {
+      provider: "instagram",
+      id: code,
+      embedUrl: `https://www.instagram.com/${type}/${code}/embed/`,
+      previewUrl: `https://www.instagram.com/${type}/${code}/embed/`,
+      thumbUrl: null,
+    };
+  }
+
+  // ── Facebook ─────────────────────────────────────────────────────
+  // facebook.com/*/videos/ID, facebook.com/watch?v=ID, fb.watch/CODE
+  if (/(?:facebook\.com|fb\.watch)/i.test(u)) {
+    const encoded = encodeURIComponent(u);
+    const fbId =
+      u.match(/\/videos\/(\d+)/)?.[1] ||
+      u.match(/[?&]v=(\d+)/)?.[1] ||
+      null;
+    return {
+      provider: "facebook",
+      id: fbId,
+      embedUrl: `https://www.facebook.com/plugins/video.php?href=${encoded}&show_text=false&autoplay=true`,
+      previewUrl: `https://www.facebook.com/plugins/video.php?href=${encoded}&show_text=false`,
+      thumbUrl: null,
+    };
+  }
+
+  // ── TikTok ───────────────────────────────────────────────────────
+  // tiktok.com/@user/video/ID
+  const tt = u.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/);
+  if (tt) {
+    const id = tt[1];
+    return {
+      provider: "tiktok",
+      id,
+      embedUrl: `https://www.tiktok.com/embed/v2/${id}?autoplay=1`,
+      previewUrl: `https://www.tiktok.com/embed/v2/${id}`,
+      thumbUrl: null,
+    };
+  }
+
+  // ── Dailymotion ──────────────────────────────────────────────────
+  // dailymotion.com/video/ID, dai.ly/ID
+  const dm =
+    u.match(/dailymotion\.com\/video\/([a-zA-Z0-9]+)/) ||
+    u.match(/dai\.ly\/([a-zA-Z0-9]+)/);
+  if (dm) {
+    const id = dm[1];
+    return {
+      provider: "dailymotion",
+      id,
+      embedUrl: `https://www.dailymotion.com/embed/video/${id}?autoplay=1`,
+      previewUrl: `https://www.dailymotion.com/embed/video/${id}`,
+      thumbUrl: `https://www.dailymotion.com/thumbnail/video/${id}`,
+    };
+  }
+
+  // ── Twitch ───────────────────────────────────────────────────────
+  // clips.twitch.tv/SLUG, twitch.tv/*/clip/SLUG, twitch.tv/videos/ID
+  const twitchClip = u.match(/(?:clips\.twitch\.tv\/|twitch\.tv\/[^/]+\/clip\/)([a-zA-Z0-9_-]+)/);
+  if (twitchClip) {
+    const slug = twitchClip[1];
+    return {
+      provider: "twitch",
+      id: slug,
+      embedUrl: `https://clips.twitch.tv/embed?clip=${slug}&parent=${typeof window !== "undefined" ? window.location.hostname : "localhost"}&autoplay=true`,
+      previewUrl: `https://clips.twitch.tv/embed?clip=${slug}&parent=${typeof window !== "undefined" ? window.location.hostname : "localhost"}`,
+      thumbUrl: null,
+    };
+  }
+  const twitchVod = u.match(/twitch\.tv\/videos\/(\d+)/);
+  if (twitchVod) {
+    const id = twitchVod[1];
+    return {
+      provider: "twitch",
+      id,
+      embedUrl: `https://player.twitch.tv/?video=${id}&parent=${typeof window !== "undefined" ? window.location.hostname : "localhost"}&autoplay=true`,
+      previewUrl: `https://player.twitch.tv/?video=${id}&parent=${typeof window !== "undefined" ? window.location.hostname : "localhost"}`,
+      thumbUrl: null,
+    };
+  }
+
   // ── Direct video file ────────────────────────────────────────────
   if (/\.(mp4|webm|mov|m4v|ogg|ogv|mkv)(\?|$)/i.test(u)) {
     return {
@@ -206,7 +298,9 @@ export function detectBadImageUrl(url: string): string | null {
   if (/^https?:\/\/(www\.)?bing\.com\/images\/search/i.test(u)) {
     return "This is a Bing Search page URL, not an image URL.";
   }
-  if (/^https?:\/\/(www\.)?(youtube\.com|youtu\.be|vimeo\.com)/i.test(u)) {
+  if (
+    /^https?:\/\/(www\.)?(youtube\.com|youtu\.be|vimeo\.com|instagram\.com|facebook\.com|fb\.watch|tiktok\.com|dailymotion\.com|twitch\.tv)/i.test(u)
+  ) {
     return "This is a video URL — paste it in the Video URL field above instead.";
   }
   return null;
