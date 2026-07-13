@@ -328,6 +328,9 @@ function Lightbox({
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                 allowFullScreen
               />
+              {/* Mask Instagram header (top) and footer/likes/comments (bottom) */}
+              <div className="lightbox-ig-mask lightbox-ig-mask--top" style={{ background: skill.bg }} />
+              <div className="lightbox-ig-mask lightbox-ig-mask--bottom" style={{ background: skill.bg }} />
             </div>
           )}
           {playing && video.provider !== "instagram" && (video.provider === "youtube" ||

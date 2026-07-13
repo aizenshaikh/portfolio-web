@@ -1510,7 +1510,7 @@ footer.site-footer {
   overflow: hidden;
 }
 
-/* Instagram embed clip — hides profile header (~68px) and footer UI (~185px) */
+/* Instagram embed — clip container, overlay masks hide header & footer chrome */
 .lightbox-ig-clip {
   position: absolute;
   inset: 0;
@@ -1519,14 +1519,28 @@ footer.site-footer {
 }
 .lightbox-ig-iframe {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  top: -68px;   /* shift up to push header out of view */
+  left: 0;
   width: 100%;
-  /* push top header out of view, extend bottom to cover footer chrome */
-  top: -68px;
-  height: calc(100% + 68px + 185px);
+  height: calc(100% + 68px);
   border: 0;
   background: #000;
+}
+/* Top mask: covers the Instagram profile header */
+.lightbox-ig-mask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+.lightbox-ig-mask--top {
+  top: 0;
+  height: 4px; /* hair-thin — header already pushed out via offset above */
+}
+.lightbox-ig-mask--bottom {
+  bottom: 0;
+  height: 210px; /* covers "View more", likes, comments, IG logo */
 }
 
 /* Portrait layout for Instagram Reels / TikTok (9:16) */
