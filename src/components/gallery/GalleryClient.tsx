@@ -185,7 +185,21 @@ export default function GalleryClient({
                       </div>
                       {video.provider && (
                         <span className="card-video-tag">
-                          {video.provider === "youtube" ? "YouTube" : video.provider === "vimeo" ? "Vimeo" : "Video"}
+                          {{
+                            youtube: "YouTube",
+                            vimeo: "Vimeo",
+                            instagram: "Instagram",
+                            facebook: "Facebook",
+                            tiktok: "TikTok",
+                            dailymotion: "Dailymotion",
+                            twitch: "Twitch",
+                            loom: "Loom",
+                            drive: "Drive",
+                            dropbox: "Dropbox",
+                            streamable: "Streamable",
+                            wistia: "Wistia",
+                            direct: "Video",
+                          }[video.provider] ?? "Video"}
                         </span>
                       )}
                     </div>
@@ -289,7 +303,12 @@ function Lightbox({
             video.provider === "loom" ||
             video.provider === "streamable" ||
             video.provider === "wistia" ||
-            video.provider === "drive") && (
+            video.provider === "drive" ||
+            video.provider === "instagram" ||
+            video.provider === "facebook" ||
+            video.provider === "tiktok" ||
+            video.provider === "dailymotion" ||
+            video.provider === "twitch") && (
             <iframe
               className="lightbox-iframe"
               src={video.embedUrl!}

@@ -99,7 +99,7 @@ export default function Showreel({ data }: Props) {
                   marginTop: 4,
                 }}
               >
-                (Add a YouTube/Vimeo link in admin to enable playback)
+                (Add a YouTube, Instagram, Facebook, TikTok, or Vimeo link in admin to enable playback)
               </p>
             )}
           </div>
