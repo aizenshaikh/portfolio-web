@@ -317,7 +317,7 @@ function Lightbox({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={`lightbox-inner${isPortrait ? " lightbox-inner--portrait" : ""}`}>
+      <div className={`lightbox-inner${isPortrait ? " lightbox-inner--portrait" : ""}${video.provider === "instagram" ? " lightbox-inner--instagram" : ""}`}>
         <div className="lightbox-thumb" style={{ background: skill.bg }}>
           {playing && video.provider === "instagram" && (
             <div className="lightbox-ig-clip">
@@ -328,9 +328,6 @@ function Lightbox({
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                 allowFullScreen
               />
-              {/* Mask Instagram header (top) and footer/likes/comments (bottom) */}
-              <div className="lightbox-ig-mask lightbox-ig-mask--top" style={{ background: skill.bg }} />
-              <div className="lightbox-ig-mask lightbox-ig-mask--bottom" style={{ background: skill.bg }} />
             </div>
           )}
           {playing && video.provider !== "instagram" && (video.provider === "youtube" ||
