@@ -288,6 +288,7 @@ function Lightbox({
   const [playing, setPlaying] = useState(false);
   const video = parseVideoUrl(work.videoUrl);
   const thumb = resolveThumb(work.thumbUrl, work.videoUrl);
+  const isPortrait = video.provider === "instagram" || video.provider === "tiktok";
 
   return (
     <div
@@ -296,7 +297,7 @@ function Lightbox({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="lightbox-inner">
+      <div className={`lightbox-inner${isPortrait ? " lightbox-inner--portrait" : ""}`}>
         <div className="lightbox-thumb" style={{ background: skill.bg }}>
           {playing && (video.provider === "youtube" ||
             video.provider === "vimeo" ||
