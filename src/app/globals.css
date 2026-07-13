@@ -1510,6 +1510,25 @@ footer.site-footer {
   overflow: hidden;
 }
 
+/* Instagram embed clip — hides profile header (~68px) and footer UI (~185px) */
+.lightbox-ig-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+}
+.lightbox-ig-iframe {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  /* push top header out of view, extend bottom to cover footer chrome */
+  top: -68px;
+  height: calc(100% + 68px + 185px);
+  border: 0;
+  background: #000;
+}
+
 /* Portrait layout for Instagram Reels / TikTok (9:16) */
 .lightbox-inner--portrait {
   display: flex;

@@ -166,12 +166,32 @@ export default function GalleryClient({
                     className="work-card"
                     onClick={() => setActive({ work: w, skill })}
                   >
-                    <div className="card-thumb" style={{ background: skill.bg }}>
+                    <div
+                      className="card-thumb"
+                      style={{
+                        background: !thumb
+                          ? video.provider === "instagram"
+                            ? "linear-gradient(135deg,#833ab4 0%,#fd1d1d 50%,#fcb045 100%)"
+                            : video.provider === "tiktok"
+                            ? "linear-gradient(135deg,#010101 0%,#69C9D0 100%)"
+                            : video.provider === "facebook"
+                            ? "#1877F2"
+                            : skill.bg
+                          : skill.bg,
+                      }}
+                    >
                       <SafeImage
                         src={thumb}
                         alt={w.title}
                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        fallback={<div className="card-thumb-bg-text">{skill.icon}</div>}
+                        fallback={
+                          <div className="card-thumb-bg-text">
+                            {video.provider === "instagram" ? "📸"
+                              : video.provider === "tiktok" ? "🎵"
+                              : video.provider === "facebook" ? "📘"
+                              : skill.icon}
+                          </div>
+                        }
                       />
                       <span className="card-type-badge" style={{ color: skill.color }}>
                         {w.type}
@@ -299,13 +319,23 @@ function Lightbox({
     >
       <div className={`lightbox-inner${isPortrait ? " lightbox-inner--portrait" : ""}`}>
         <div className="lightbox-thumb" style={{ background: skill.bg }}>
-          {playing && (video.provider === "youtube" ||
+          {playing && video.provider === "instagram" && (
+            <div className="lightbox-ig-clip">
+              <iframe
+                className="lightbox-ig-iframe"
+                src={video.embedUrl!}
+                title={work.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                allowFullScreen
+              />
+            </div>
+          )}
+          {playing && video.provider !== "instagram" && (video.provider === "youtube" ||
             video.provider === "vimeo" ||
             video.provider === "loom" ||
             video.provider === "streamable" ||
             video.provider === "wistia" ||
             video.provider === "drive" ||
-            video.provider === "instagram" ||
             video.provider === "facebook" ||
             video.provider === "tiktok" ||
             video.provider === "dailymotion" ||
