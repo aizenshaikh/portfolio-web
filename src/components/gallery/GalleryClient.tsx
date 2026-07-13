@@ -44,6 +44,8 @@ export default function GalleryClient({
 }) {
   const [filter, setFilter] = useState<string>("all");
   const [active, setActive] = useState<{ work: Work; skill: Skill } | null>(null);
+  // Auto-fetched thumbnails for Instagram/TikTok works that have no manual thumb
+  const [autoThumbs, setAutoThumbs] = useState<Record<string, string>>({});
 
   const totalAll = useMemo(
     () => skills.reduce((acc, s) => acc + s.works.length + s.emptyCount, 0),
@@ -64,6 +66,26 @@ export default function GalleryClient({
       document.body.style.overflow = "";
     };
   }, [active]);
+
+  // Fetch Instagram thumbnails server-side proxy for cards with no manual thumb
+  useEffect(() => {
+    skills.forEach((skill) => {
+      skill.works.forEach((w) => {
+        if (w.thumbUrl) return; // already has a manual thumbnail
+        const video = parseVideoUrl(w.videoUrl);
+        if (video.provider !== "instagram" || !w.videoUrl) return;
+        fetch(`/api/instagram-thumb?url=${encodeURIComponent(w.videoUrl)}`)
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.thumbUrl) {
+              setAutoThumbs((prev) => ({ ...prev, [w.id]: data.thumbUrl }));
+            }
+          })
+          .catch(() => {});
+      });
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const visibleSkills =
     filter === "all" ? skills : skills.filter((s) => s.key === filter);
@@ -158,7 +180,7 @@ export default function GalleryClient({
             <div className="work-grid">
               {skill.works.map((w) => {
                 const video = parseVideoUrl(w.videoUrl);
-                const thumb = resolveThumb(w.thumbUrl, w.videoUrl);
+                const thumb = autoThumbs[w.id] || resolveThumb(w.thumbUrl, w.videoUrl);
                 return (
                   <button
                     type="button"
@@ -289,6 +311,7 @@ export default function GalleryClient({
         <Lightbox
           work={active.work}
           skill={active.skill}
+          autoThumb={autoThumbs[active.work.id]}
           onClose={() => setActive(null)}
         />
       )}
@@ -299,15 +322,17 @@ export default function GalleryClient({
 function Lightbox({
   work,
   skill,
+  autoThumb,
   onClose,
 }: {
   work: Work;
   skill: Skill;
+  autoThumb?: string;
   onClose: () => void;
 }) {
   const [playing, setPlaying] = useState(false);
   const video = parseVideoUrl(work.videoUrl);
-  const thumb = resolveThumb(work.thumbUrl, work.videoUrl);
+  const thumb = autoThumb || resolveThumb(work.thumbUrl, work.videoUrl);
   const isPortrait = video.provider === "instagram" || video.provider === "tiktok";
 
   return (
