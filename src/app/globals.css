@@ -1510,11 +1510,16 @@ footer.site-footer {
   overflow: hidden;
 }
 
-/* Instagram lightbox: size container to the actual video area only */
+/* Instagram lightbox: fix thumb to video-only height, prevent flex stretch */
+.lightbox-inner--instagram {
+  align-items: flex-start;
+}
 .lightbox-inner--instagram .lightbox-thumb {
-  /* Override 9/16 — Instagram embed shows reels at ~4:5 within its chrome */
   aspect-ratio: unset !important;
-  height: 400px;
+  width: 320px !important;
+  height: 400px !important;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 /* Clip iframe to remove Instagram header (~68px) and footer (~210px) */
 .lightbox-ig-clip {
@@ -1528,7 +1533,7 @@ footer.site-footer {
   top: -68px;    /* push Instagram profile header above the container */
   left: 0;
   width: 100%;
-  height: 700px; /* full embed height; header + video + footer = ~68+400+210px */
+  height: 700px; /* full embed height: header + video + footer ≈ 700px */
   border: 0;
   background: #000;
 }
