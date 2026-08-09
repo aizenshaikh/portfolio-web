@@ -1,5 +1,6 @@
 type HeadlineLine = { text: string; style?: "plain" | "outline" | "gradient" };
 type Cta = { label: string; href: string };
+type FanTile = { icon?: string; label?: string };
 type Props = {
   data: {
     eyebrow?: string;
@@ -7,11 +8,13 @@ type Props = {
     sub?: string;
     primaryCta?: Cta;
     secondaryCta?: Cta;
+    fanTiles?: FanTile[];
   };
 };
 
 export default function Hero({ data }: Props) {
   const lines = data.headline || [];
+  const fanTiles = data.fanTiles || [];
   return (
     <section id="hero">
       <div className="hero-video-bg"></div>
@@ -48,6 +51,16 @@ export default function Hero({ data }: Props) {
             </a>
           )}
         </div>
+        {fanTiles.length > 0 && (
+          <div className="hero-fan">
+            {fanTiles.map((t, i) => (
+              <div key={i} className="hero-fan-tile">
+                <span>{t.icon}</span>
+                <span className="label">{t.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="hero-scroll">
         <span>Scroll</span>

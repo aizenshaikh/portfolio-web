@@ -3,8 +3,15 @@ import { useEffect } from "react";
 
 export default function SiteEffects() {
   useEffect(() => {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
     const preloader = document.getElementById("preloader");
-    const t = setTimeout(() => preloader?.classList.add("hidden"), 1800);
+    const t = setTimeout(
+      () => preloader?.classList.add("hidden"),
+      reduceMotion ? 0 : 1800
+    );
 
     const dot = document.getElementById("cursorDot");
     const ring = document.getElementById("cursorRing");
@@ -20,7 +27,6 @@ export default function SiteEffects() {
         dot.style.top = mouseY + "px";
       }
     };
-    document.addEventListener("mousemove", onMove);
     let raf = 0;
     const animate = () => {
       ringX += (mouseX - ringX) * 0.12;
@@ -31,17 +37,19 @@ export default function SiteEffects() {
       }
       raf = requestAnimationFrame(animate);
     };
-    animate();
-
     const hoverEls = document.querySelectorAll(
       "a, button, .service-card, .project-card, .btn-primary, .btn-outline"
     );
     const onEnter = () => ring?.classList.add("hover");
     const onLeave = () => ring?.classList.remove("hover");
-    hoverEls.forEach((el) => {
-      el.addEventListener("mouseenter", onEnter);
-      el.addEventListener("mouseleave", onLeave);
-    });
+    if (!reduceMotion) {
+      document.addEventListener("mousemove", onMove);
+      animate();
+      hoverEls.forEach((el) => {
+        el.addEventListener("mouseenter", onEnter);
+        el.addEventListener("mouseleave", onLeave);
+      });
+    }
 
     const onScroll = () => {
       const sp = document.getElementById("scroll-progress");
@@ -68,23 +76,28 @@ export default function SiteEffects() {
     revealEls.forEach((el) => observer.observe(el));
 
     const counters = document.querySelectorAll<HTMLElement>("[data-count]");
+    const animateCount = (el: HTMLElement, target: number) => {
+      if (reduceMotion) {
+        el.textContent = target + "+";
+        return;
+      }
+      const duration = 1200;
+      let start = 0;
+      const step = (ts: number) => {
+        if (!start) start = ts;
+        const progress = Math.min((ts - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic: settles like a thrown object
+        el.textContent = Math.round(eased * target) + "+";
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
     const counterObs = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           const el = entry.target as HTMLElement;
-          const target = +(el.dataset.count || "0");
-          let current = 0;
-          const step = Math.max(1, Math.ceil(target / 40));
-          const timer = setInterval(() => {
-            current += step;
-            if (current >= target) {
-              el.textContent = target + "+";
-              clearInterval(timer);
-            } else {
-              el.textContent = current + "+";
-            }
-          }, 35);
+          animateCount(el, +(el.dataset.count || "0"));
           counterObs.unobserve(el);
         });
       },

@@ -14,8 +14,8 @@ export default async function MediaPage() {
         className="admin-card"
         style={{
           background:
-            "linear-gradient(135deg, rgba(245,166,35,0.07), rgba(255,92,53,0.05))",
-          borderColor: "rgba(245,166,35,0.18)",
+            "linear-gradient(135deg, rgba(var(--accent-rgb),0.07), rgba(var(--accent2-rgb),0.05))",
+          borderColor: "rgba(var(--accent-rgb),0.18)",
         }}
       >
         <div style={{ fontWeight: 600, marginBottom: 6 }}>

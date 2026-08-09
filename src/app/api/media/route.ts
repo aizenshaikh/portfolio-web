@@ -5,6 +5,12 @@ import { prisma } from "@/lib/prisma";
 import { put, del } from "@vercel/blob";
 import path from "node:path";
 import crypto from "node:crypto";
+import fs from "node:fs/promises";
+
+// Vercel's filesystem is ephemeral in production, so real deploys need
+// Blob storage. Locally there's usually no BLOB_READ_WRITE_TOKEN, so fall
+// back to writing into public/uploads/ for a working dev experience.
+const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -33,14 +39,26 @@ export async function POST(req: NextRequest) {
   }
   const ext = path.extname(file.name) || ".bin";
   const safeExt = ext.replace(/[^.a-zA-Z0-9]/g, "");
-  const name = `uploads/${crypto.randomBytes(8).toString("hex")}${safeExt}`;
-  const blob = await put(name, file, {
-    access: "public",
-    contentType: file.type || undefined,
-  });
+  const filename = `${crypto.randomBytes(8).toString("hex")}${safeExt}`;
   const type = file.type.startsWith("video/") ? "video" : "image";
+
+  let url: string;
+  if (useBlob) {
+    const blob = await put(`uploads/${filename}`, file, {
+      access: "public",
+      contentType: file.type || undefined,
+    });
+    url = blob.url;
+  } else {
+    const uploadsDir = path.join(process.cwd(), "public", "uploads");
+    await fs.mkdir(uploadsDir, { recursive: true });
+    const bytes = Buffer.from(await file.arrayBuffer());
+    await fs.writeFile(path.join(uploadsDir, filename), bytes);
+    url = `/uploads/${filename}`;
+  }
+
   const media = await prisma.media.create({
-    data: { url: blob.url, alt, type },
+    data: { url, alt, type },
   });
   return NextResponse.json({ media });
 }
@@ -54,11 +72,19 @@ export async function DELETE(req: NextRequest) {
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
   const media = await prisma.media.findUnique({ where: { id } });
   if (!media) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  // Delete from Vercel Blob storage first, then DB record
-  try {
-    await del(media.url);
-  } catch {
-    // Blob may not exist (e.g. external URL) — continue with DB delete
+  // Delete the underlying file first, then the DB record
+  if (media.url.startsWith("/uploads/")) {
+    try {
+      await fs.unlink(path.join(process.cwd(), "public", media.url));
+    } catch {
+      // File may already be gone — continue with DB delete
+    }
+  } else {
+    try {
+      await del(media.url);
+    } catch {
+      // Blob may not exist (e.g. external URL) — continue with DB delete
+    }
   }
   await prisma.media.delete({ where: { id } });
   return NextResponse.json({ ok: true });

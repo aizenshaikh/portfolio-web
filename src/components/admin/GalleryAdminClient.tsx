@@ -167,7 +167,7 @@ function NewSkillSection() {
   const [key, setKey] = useState("");
   const [label, setLabel] = useState("");
   const [icon, setIcon] = useState("✨");
-  const [color, setColor] = useState("#F5A623");
+  const [color, setColor] = useState("#D6FF3F");
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 

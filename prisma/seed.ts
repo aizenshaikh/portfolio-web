@@ -19,20 +19,20 @@ async function main() {
   await prisma.themeSettings.create({
     data: {
       colors: JSON.stringify({
-        bg: "#060606",
-        bg2: "#0d0d0d",
-        bg3: "#141414",
-        accent: "#F5A623",
-        accent2: "#FF5C35",
-        white: "#F2F2F2",
-        grey: "#888888",
-        grey2: "#444444",
+        bg: "#07080a",
+        bg2: "#0e1013",
+        bg3: "#17191d",
+        accent: "#D6FF3F",
+        accent2: "#8C5CFF",
+        white: "#F5F5F0",
+        grey: "#9A9A9A",
+        grey2: "#5C5C5C",
         border: "rgba(255,255,255,0.07)",
       }),
       fonts: JSON.stringify({
-        head: "'Bebas Neue', sans-serif",
+        head: "'Bricolage Grotesque', sans-serif",
         body: "'Inter', sans-serif",
-        sub: "'DM Sans', sans-serif",
+        sub: "'Space Grotesk', sans-serif",
       }),
       spacing: JSON.stringify({
         sectionPadding: "100px 5%",
@@ -74,14 +74,21 @@ async function main() {
       blocks: {
         eyebrow: "Available for Projects — 2026",
         headline: [
-          { text: "I DON'T JUST", style: "plain" },
-          { text: "EDIT VIDEOS —", style: "outline" },
-          { text: "I CREATE", style: "gradient" },
-          { text: "EXPERIENCES.", style: "plain" },
+          { text: "I don't just", style: "plain" },
+          { text: "design visuals —", style: "outline" },
+          { text: "I build", style: "gradient" },
+          { text: "brands.", style: "plain" },
         ],
-        sub: "Video Editor · Motion Designer · Creative Director · Brand Strategist.\nHelping brands grow through strategic video, design, and visual storytelling.",
+        sub: "Graphic Designer · Motion Designer · Video Editor · Creative Director.\nHelping brands grow through bold design, strategic video, and visual storytelling.",
         primaryCta: { label: "View My Work", href: "#projects" },
         secondaryCta: { label: "Let's Work Together", href: "#contact" },
+        fanTiles: [
+          { icon: "🎨", label: "Design" },
+          { icon: "✨", label: "Motion" },
+          { icon: "🎥", label: "Video" },
+          { icon: "🧠", label: "Strategy" },
+          { icon: "📈", label: "Growth" },
+        ],
       },
     },
     {
@@ -101,26 +108,53 @@ async function main() {
       order: 3,
       blocks: {
         items: [
-          "Video Editing",
-          "Motion Graphics",
           "Graphic Design",
+          "Brand Identity",
+          "Motion Graphics",
           "Visual Direction",
+          "Video Editing",
           "Social Media Strategy",
           "B2C Marketing",
-          "Videography",
           "Creative Leadership",
         ],
       },
     },
     {
-      type: "showreel",
+      type: "problem",
       order: 4,
       blocks: {
+        label: "The Problem",
+        title: "Great Footage,\nBut No Real Story?",
+        titleAccentLine: 2,
+        sub: "You're capturing great moments, but raw footage sitting on a drive doesn't grow a brand. The gap usually isn't the content — it's what happens to it after the camera stops rolling.",
+        cards: [
+          {
+            mockup: "chart",
+            title: "Views That Don't Convert",
+            desc: "High view counts look good on paper, but without a hook and a real story arc, that attention rarely turns into results.",
+          },
+          {
+            mockup: "ring",
+            title: "Edits That Take Too Long",
+            desc: "Every week a video sits unedited is momentum lost — slow turnaround quietly kills the consistency platforms reward.",
+          },
+          {
+            mockup: "grid",
+            title: "No System, No Consistency",
+            desc: "Posting whenever inspiration strikes instead of on a plan leads to inconsistent growth and an audience that never quite builds.",
+          },
+        ],
+      },
+    },
+    {
+      type: "showreel",
+      order: 5,
+      blocks: {
         label: "Showreel",
-        title: "WATCH THE\nMAGIC HAPPEN",
+        title: "Watch the\nMagic Happen",
         titleAccentLine: 2,
         body: "A curated selection of my best edits — brand films, reels, motion graphics, and storytelling that drives results.",
-        playLabel: "PLAY SHOWREEL — 2026",
+        playLabel: "Play Showreel — 2026",
         duration: "00:30",
         tag: "Best of 2024–2026",
         videoUrl: "",
@@ -129,28 +163,29 @@ async function main() {
     },
     {
       type: "about",
-      order: 5,
+      order: 6,
       blocks: {
         label: "About Me",
-        title: "THE MIND\nBEHIND THE\nFRAME",
+        title: "The Mind\nBehind the\nFrame",
         titleAccentLine: 3,
+        photoUrl: "",
         initials: "AS",
         badgeBig: "5+",
-        badgeText: "YEARS OF\nCRAFT",
+        badgeText: "Years of\nCraft",
         paragraphs: [
-          "I'm not just a video editor — I'm a complete creative partner. My journey started with a passion for visual storytelling, and over the past 5+ years I've evolved into a multi-disciplined creative professional who bridges design, video, motion, and marketing strategy.",
-          "I've helped brands, businesses, and individuals cut through the noise with content that doesn't just look good — it converts. From cinematic brand films to high-energy social reels, from motion graphics to B2C marketing campaigns, I bring both the technical skill and the strategic thinking every project needs.",
+          "I'm a graphic designer at heart — and a complete creative partner in practice. My journey started with a passion for visual storytelling, and over the past 5+ years I've evolved into a multi-disciplined creative professional who bridges design, motion, video, and marketing strategy.",
+          "I've helped brands, businesses, and individuals cut through the noise with visuals that don't just look good — they convert. From brand identities and campaign design to motion graphics and cinematic edits, I bring both the technical skill and the strategic thinking every project needs.",
           "My approach? **Obsess over the craft. Lead with purpose. Deliver results.**",
         ],
         skills: [
-          "Premiere Pro",
-          "After Effects",
-          "DaVinci Resolve",
           "Photoshop",
           "Illustrator",
           "Figma",
+          "After Effects",
+          "Premiere Pro",
+          "DaVinci Resolve",
           "Cinema 4D",
-          "Social Strategy",
+          "Brand Identity",
           "Color Grading",
           "Team Leadership",
         ],
@@ -158,17 +193,30 @@ async function main() {
     },
     {
       type: "services",
-      order: 6,
+      order: 7,
       blocks: {
-        label: "What I Do",
-        title: "SERVICES\n& EXPERTISE",
+        label: "How I Fix It",
+        title: "One Partner,\nEvery Deliverable",
         titleAccentLine: 2,
-        body: "End-to-end creative solutions — from raw footage to finished campaign.",
+        body: "End-to-end creative solutions — from raw footage to a finished campaign that performs.",
         cards: [
+          {
+            icon: "🎨",
+            category: "Design & Motion",
+            name: "Graphic &\nMotion",
+            desc: "Eye-catching visuals and fluid animations that elevate your brand identity.",
+            list: [
+              "Graphic Design",
+              "Branding & Visual Identity",
+              "Motion Graphics & Animation",
+              "Thumbnail & Cover Design",
+              "Ad Creatives",
+            ],
+          },
           {
             icon: "🎥",
             category: "Production",
-            name: "VIDEO &\nEDITING",
+            name: "Video &\nEditing",
             desc: "Cinematic cuts that tell your story and keep audiences watching till the end.",
             list: [
               "Professional Video Editing",
@@ -179,22 +227,9 @@ async function main() {
             ],
           },
           {
-            icon: "✨",
-            category: "Design & Motion",
-            name: "GRAPHIC &\nMOTION",
-            desc: "Eye-catching visuals and fluid animations that elevate your brand identity.",
-            list: [
-              "Motion Graphics & Animation",
-              "Graphic Design",
-              "Branding & Visual Identity",
-              "Thumbnail & Cover Design",
-              "Ad Creatives",
-            ],
-          },
-          {
             icon: "📈",
             category: "Strategy & Growth",
-            name: "SOCIAL &\nMARKETING",
+            name: "Social &\nMarketing",
             desc: "Data-informed strategies that translate creative output into real business growth.",
             list: [
               "Social Media Management",
@@ -207,7 +242,7 @@ async function main() {
           {
             icon: "🧠",
             category: "Leadership",
-            name: "CREATIVE\nDIRECTION",
+            name: "Creative\nDirection",
             desc: "Visionary leadership that aligns creative teams around one powerful brand story.",
             list: [
               "Creative Direction",
@@ -221,11 +256,28 @@ async function main() {
       },
     },
     {
+      type: "platforms",
+      order: 8,
+      blocks: {
+        label: "Platforms",
+        title: "Fluent in Every\nMajor Editing Tool",
+        titleAccentLine: 2,
+        sub: "Whatever software your footage lives in, I already know it — no ramp-up time, no delays, just great edits.",
+        tiles: [
+          { icon: "davinciresolve", name: "DaVinci Resolve", color: "#233A51" },
+          { icon: "photoshop", name: "Photoshop", color: "#31A8FF" },
+          { icon: "illustrator", name: "Illustrator", color: "#FF9A00" },
+          { icon: "openai", name: "AI (ChatGPT)", color: "#412991" },
+          { icon: "blender", name: "Blender", color: "#E87D0D" },
+        ],
+      },
+    },
+    {
       type: "projects",
-      order: 7,
+      order: 9,
       blocks: {
         label: "Case Studies",
-        title: "SELECTED\nWORK",
+        title: "Selected\nWork",
         titleAccentLine: 2,
         body: "Real projects. Real results. Real impact.",
         cards: [
@@ -261,41 +313,41 @@ async function main() {
     },
     {
       type: "process",
-      order: 8,
+      order: 10,
       blocks: {
         label: "My Approach",
-        title: "THE CREATIVE\nPROCESS",
+        title: "The Creative\nProcess",
         titleAccentLine: 2,
         body: "Every project I take on follows a proven framework — from discovery to delivery, nothing is left to chance.",
         steps: [
           {
             n: "01",
-            title: "DISCOVER",
+            title: "Discover",
             desc: "Deep dive into your brand, goals, and target audience to understand the real challenge.",
           },
           {
             n: "02",
-            title: "STRATEGY",
+            title: "Strategy",
             desc: "Build a content and creative strategy that aligns with business outcomes — not just aesthetics.",
           },
           {
             n: "03",
-            title: "CONCEPT",
+            title: "Concept",
             desc: "Develop visual concepts, moodboards, and storyboards before a single frame is cut.",
           },
           {
             n: "04",
-            title: "EXECUTE",
+            title: "Execute",
             desc: "Craft the actual content — editing, animation, design — with obsessive attention to detail.",
           },
           {
             n: "05",
-            title: "REFINE",
+            title: "Refine",
             desc: "Review, gather feedback, and iterate until the result is exactly right — or better.",
           },
           {
             n: "06",
-            title: "DELIVER",
+            title: "Deliver",
             desc: "Final delivery in every required format, optimized for maximum performance.",
           },
         ],
@@ -303,10 +355,10 @@ async function main() {
     },
     {
       type: "testimonials",
-      order: 9,
+      order: 11,
       blocks: {
         label: "Testimonials",
-        title: "WHAT CLIENTS\nSAY",
+        title: "What Clients\nSay",
         titleAccentLine: 2,
         cards: [
           {
@@ -337,17 +389,74 @@ async function main() {
       },
     },
     {
+      type: "pricing",
+      order: 12,
+      blocks: {
+        label: "Pricing",
+        title: "Simple Plans Built\nAround Your Content",
+        titleAccentLine: 2,
+        sub: "Every project is different, so pricing is scoped to your goals and volume — here's the general shape of how we can work together.",
+        plans: [
+          {
+            name: "Starter",
+            desc: "Perfect for a single campaign or one-off project.",
+            price: "Custom Quote",
+            unit: "",
+            featured: false,
+            features: [
+              "1–2 short-form or long-form edits",
+              "Color grading & sound design",
+              "Platform-ready export formats",
+              "Standard turnaround",
+            ],
+            ctaLabel: "Get a Quote",
+            ctaHref: "#contact",
+          },
+          {
+            name: "Ongoing Partner",
+            desc: "For creators and brands publishing consistently.",
+            price: "Custom Quote",
+            unit: "",
+            featured: true,
+            features: [
+              "Monthly content retainer",
+              "Priority turnaround",
+              "Motion graphics & thumbnails included",
+              "Regular strategy check-ins",
+            ],
+            ctaLabel: "Let's Talk",
+            ctaHref: "#contact",
+          },
+          {
+            name: "Full-Service",
+            desc: "End-to-end creative direction for a brand or team.",
+            price: "Custom Quote",
+            unit: "",
+            featured: false,
+            features: [
+              "Creative direction & strategy",
+              "Team leadership & pipeline setup",
+              "Full production + post",
+              "Dedicated point of contact",
+            ],
+            ctaLabel: "Get a Quote",
+            ctaHref: "#contact",
+          },
+        ],
+      },
+    },
+    {
       type: "galleryTeaser",
-      order: 10,
+      order: 13,
       blocks: {
         label: "Full Portfolio",
-        title: "EXPLORE THE\nCOMPLETE GALLERY",
+        title: "Explore the\nComplete Gallery",
         titleAccentLine: 2,
         body: "Browse every project, sorted by skill — Video Editing, Motion Graphics, Graphic Design, Social Media, Visual Direction, B2C Marketing, and more. Unlimited works per category.",
         chips: [
-          "🎥 Video Editing",
-          "✨ Motion Graphics",
           "🎨 Graphic Design",
+          "✨ Motion Graphics",
+          "🎥 Video Editing",
           "📱 Social Media",
           "📈 Marketing",
           "+ More",
@@ -357,11 +466,43 @@ async function main() {
       },
     },
     {
+      type: "faq",
+      order: 14,
+      blocks: {
+        label: "FAQ",
+        title: "Everything You\nNeed to Know",
+        titleAccentLine: 2,
+        sub: "Still deciding if we're a fit? Here are the questions I get asked most.",
+        items: [
+          {
+            q: "What kind of projects do you take on?",
+            a: "Everything from brand films and social reels to full campaign motion graphics and long-form YouTube edits — if it involves video, design, or a story that needs telling, it's likely in scope.",
+          },
+          {
+            q: "Do you only edit, or help with strategy too?",
+            a: "Both. Every project starts with understanding the goal, not just the footage, so the final edit is built to perform, not just look good.",
+          },
+          {
+            q: "Can I request revisions?",
+            a: "Yes — every project includes a review round so we can refine the edit together until it's right.",
+          },
+          {
+            q: "What tools do you work in?",
+            a: "Premiere Pro, After Effects, DaVinci Resolve, Photoshop, Illustrator, and Cinema 4D, among others — whatever the project calls for.",
+          },
+          {
+            q: "How do we get started?",
+            a: "Reach out through the contact section with a bit about your project, and we'll figure out the right scope and plan together.",
+          },
+        ],
+      },
+    },
+    {
       type: "contact",
-      order: 11,
+      order: 15,
       blocks: {
         label: "Let's Collaborate",
-        title: "LET'S CREATE\nSOMETHING\nREMARKABLE.",
+        title: "Let's Create\nSomething\nRemarkable.",
         titleAccentLine: 2,
         body: "Whether you have a project in mind or just want to explore possibilities — my inbox is open. Let's turn your vision into something the world can't ignore.",
         email: "axinbodyindia@gmail.com",
@@ -375,7 +516,7 @@ async function main() {
     },
     {
       type: "footer",
-      order: 12,
+      order: 16,
       blocks: {
         logo: "AMIN",
         logoAccent: ".",
@@ -410,12 +551,12 @@ async function main() {
   await prisma.galleryPage.create({
     data: {
       eyebrow: "Creative Portfolio — 2026",
-      titleLine1: "WORK",
-      titleLine2: "GALLERY",
-      titleLine3: "& SHOWCASE",
+      titleLine1: "Work",
+      titleLine2: "Gallery",
+      titleLine3: "& Showcase",
       description:
         "Every project is a story. Browse through my complete body of work — sorted by skill, filtered by style. Click any card to explore the details.",
-      bannerTitle: "READY TO START A PROJECT?",
+      bannerTitle: "Ready to Start a Project?",
       bannerSub:
         "Let's turn your next idea into something the world won't ignore.",
       bannerCta: "Get In Touch →",
@@ -430,9 +571,10 @@ async function main() {
   const skills = [
     {
       key: "video-editing",
+      order: 2,
       label: "Video Editing",
       icon: "🎥",
-      color: "#F5A623",
+      color: "#FFB86B",
       bg: "linear-gradient(135deg,#1a0d00,#2e1800)",
       emptyCount: 3,
       works: [
@@ -446,6 +588,7 @@ async function main() {
     },
     {
       key: "videography",
+      order: 3,
       label: "Videography",
       icon: "📹",
       color: "#4ECDC4",
@@ -460,9 +603,10 @@ async function main() {
     },
     {
       key: "motion-graphics",
+      order: 1,
       label: "Motion Graphics",
       icon: "✨",
-      color: "#FF6B6B",
+      color: "#8C5CFF",
       bg: "linear-gradient(135deg,#1a0000,#2e0a0a)",
       emptyCount: 3,
       works: [
@@ -475,9 +619,10 @@ async function main() {
     },
     {
       key: "graphic-design",
+      order: 0,
       label: "Graphic Design",
       icon: "🎨",
-      color: "#74B9FF",
+      color: "#D6FF3F",
       bg: "linear-gradient(135deg,#00101a,#001a2e)",
       emptyCount: 3,
       works: [
@@ -491,6 +636,7 @@ async function main() {
     },
     {
       key: "social-media",
+      order: 4,
       label: "Social Media Management",
       icon: "📱",
       color: "#A29BFE",
@@ -505,6 +651,7 @@ async function main() {
     },
     {
       key: "visual-direction",
+      order: 5,
       label: "Visual Direction",
       icon: "🎯",
       color: "#FD79A8",
@@ -518,6 +665,7 @@ async function main() {
     },
     {
       key: "marketing",
+      order: 6,
       label: "B2C Marketing",
       icon: "📈",
       color: "#FF7675",
@@ -532,6 +680,7 @@ async function main() {
     },
     {
       key: "leadership",
+      order: 7,
       label: "Leadership",
       icon: "🧠",
       color: "#55EFC4",
@@ -554,7 +703,7 @@ async function main() {
         icon: s.icon,
         color: s.color,
         bg: s.bg,
-        order: i,
+        order: s.order,
         emptyCount: s.emptyCount,
         isVisible: true,
       },

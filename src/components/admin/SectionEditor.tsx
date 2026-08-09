@@ -1,6 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import { updateAllBlocks } from "@/app/admin/sections/actions";
+import MediaPicker from "./MediaPicker";
 
 type Block = { key: string; value: string };
 
@@ -28,6 +29,7 @@ export default function SectionEditor({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [pickerIndex, setPickerIndex] = useState<number | null>(null);
 
   function update(i: number, value: string) {
     setItems((prev) => prev.map((b, j) => (j === i ? { ...b, value } : b)));
@@ -86,13 +88,23 @@ export default function SectionEditor({
             <div className="admin-label" style={{ margin: 0 }}>
               {b.key}
             </div>
-            <button
-              className="admin-btn admin-btn-danger"
-              onClick={() => remove(i)}
-              type="button"
-            >
-              Remove
-            </button>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button
+                type="button"
+                className="admin-btn admin-btn-secondary"
+                onClick={() => setPickerIndex(i)}
+                title="Insert an uploaded image or video URL here"
+              >
+                📁 Media
+              </button>
+              <button
+                className="admin-btn admin-btn-danger"
+                onClick={() => remove(i)}
+                type="button"
+              >
+                Remove
+              </button>
+            </div>
           </div>
           <textarea
             className="admin-textarea"
@@ -102,6 +114,16 @@ export default function SectionEditor({
           />
         </div>
       ))}
+
+      <MediaPicker
+        open={pickerIndex !== null}
+        filter="all"
+        onClose={() => setPickerIndex(null)}
+        onPick={(url) => {
+          if (pickerIndex !== null) update(pickerIndex, JSON.stringify(url));
+          setPickerIndex(null);
+        }}
+      />
 
       <div className="admin-card">
         <div className="admin-label">Add new block</div>

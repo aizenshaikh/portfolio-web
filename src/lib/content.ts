@@ -17,20 +17,20 @@ export async function getSections() {
 
 const DEFAULT_THEME = {
   colors: {
-    bg: "#060606",
-    bg2: "#0f0f0f",
-    bg3: "#1a1a1a",
-    accent: "#F5A623",
-    accent2: "#FF5C35",
-    white: "#F5F0E8",
-    grey: "#888888",
-    grey2: "#555555",
-    border: "rgba(255,255,255,0.06)",
+    bg: "#07080a",
+    bg2: "#0e1013",
+    bg3: "#17191d",
+    accent: "#D6FF3F",
+    accent2: "#8C5CFF",
+    white: "#F5F5F0",
+    grey: "#9A9A9A",
+    grey2: "#5C5C5C",
+    border: "rgba(255,255,255,0.07)",
   },
   fonts: {
-    head: "'Bebas Neue', sans-serif",
+    head: "'Bricolage Grotesque', sans-serif",
     body: "'Inter', sans-serif",
-    sub: "'DM Sans', sans-serif",
+    sub: "'Space Grotesk', sans-serif",
   },
   spacing: {
     "section-padding": "100px 5%",
@@ -56,13 +56,30 @@ export async function getTheme() {
   };
 }
 
+// Parses #rgb / #rrggbb into "r,g,b" so CSS can do rgba(var(--accent-rgb), alpha).
+// Returns null for values that aren't a plain hex color (e.g. existing rgba() strings).
+function hexToRgbTuple(hex: string): string | null {
+  const m = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.exec(hex.trim());
+  if (!m) return null;
+  let h = m[1];
+  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `${r}, ${g}, ${b}`;
+}
+
 export function themeToCssVars(theme: {
   colors: Record<string, string>;
   fonts: Record<string, string>;
   spacing: Record<string, string>;
 }): string {
   const lines: string[] = [];
-  for (const [k, v] of Object.entries(theme.colors)) lines.push(`--${k}: ${v};`);
+  for (const [k, v] of Object.entries(theme.colors)) {
+    lines.push(`--${k}: ${v};`);
+    const rgb = hexToRgbTuple(v);
+    if (rgb) lines.push(`--${k}-rgb: ${rgb};`);
+  }
   for (const [k, v] of Object.entries(theme.fonts)) lines.push(`--font-${k}: ${v};`);
   for (const [k, v] of Object.entries(theme.spacing)) lines.push(`--${k}: ${v};`);
   return `:root{${lines.join("")}}`;

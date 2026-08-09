@@ -1,10 +1,12 @@
 import SectionTitle from "./SectionTitle";
+import SafeImage from "@/components/SafeImage";
 
 type Props = {
   data: {
     label?: string;
     title?: string;
     titleAccentLine?: number;
+    photoUrl?: string;
     initials?: string;
     badgeBig?: string;
     badgeText?: string;
@@ -40,7 +42,18 @@ export default function About({ data }: Props) {
       <div className="about-grid">
         <div className="about-img-wrap reveal-left">
           <div className="about-img">
-            <div className="about-img-inner">{data.initials}</div>
+            <SafeImage
+              src={data.photoUrl}
+              alt={data.title || "About"}
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+              fallback={<div className="about-img-inner">{data.initials}</div>}
+            />
             <div className="about-img-overlay"></div>
           </div>
           {(data.badgeBig || data.badgeText) && (

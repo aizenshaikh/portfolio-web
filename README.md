@@ -13,9 +13,13 @@ npm run dev
 
 Open http://localhost:3000 — admin panel at `/admin/login`.
 
+> **Local dev currently runs on SQLite** (`prisma/dev.db`, `DATABASE_URL="file:./dev.db"` in `.env`), and `prisma/schema.prisma`'s datasource `provider` is set to `"sqlite"` to match.
+
 ## Deploying to Vercel + Neon
 
 This app needs Postgres. Free tier of Neon + Vercel covers it.
+
+> ⚠️ **Before deploying**: `prisma/schema.prisma` must have `provider = "postgresql"`, not `"sqlite"`. The `vercel-build` script runs `prisma db push` against the Postgres `DATABASE_URL` set in Vercel — if the schema still says `sqlite`, that push (and the whole build) fails. Flip the provider back to `postgresql` right before pushing to the branch Vercel deploys from, then back to `sqlite` to keep developing locally.
 
 ### 1. Create a Neon Postgres database
 1. Go to https://neon.tech and sign up with GitHub
