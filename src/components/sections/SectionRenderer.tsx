@@ -48,15 +48,18 @@ export default function SectionRenderer({
 }: {
   sections: SectionData[];
 }) {
+  const render = (s: SectionData) => {
+    const Cmp = REGISTRY[s.type];
+    return Cmp ? <Cmp key={s.id} data={s.data} /> : null;
+  };
+  const visible = sections.filter((s) => s.isVisible);
+  // Landmarks: nav before <main>, footer after it, so the skip link lands on content.
+  const chrome = (t: string) => t === "nav" || t === "footer";
   return (
     <>
-      {sections
-        .filter((s) => s.isVisible)
-        .map((s) => {
-          const Cmp = REGISTRY[s.type];
-          if (!Cmp) return null;
-          return <Cmp key={s.id} data={s.data} />;
-        })}
+      {visible.filter((s) => s.type === "nav").map(render)}
+      <main id="main">{visible.filter((s) => !chrome(s.type)).map(render)}</main>
+      {visible.filter((s) => s.type === "footer").map(render)}
     </>
   );
 }

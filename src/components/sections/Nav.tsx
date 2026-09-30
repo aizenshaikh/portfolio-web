@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -21,14 +21,26 @@ export default function Nav({ data }: Props) {
   const resolveHref = (href: string) =>
     href.startsWith("#") && !isHome ? `/${href}` : href;
   const links = data.links || [];
+
+  // Let the scroll engine know not to tuck the bar away while the sheet is open,
+  // and close on Escape.
+  useEffect(() => {
+    document.body.dataset.menu = open ? "open" : "";
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   return (
     <>
-      <nav id="site-nav" className="site-nav">
+      <nav id="site-nav" className="site-nav" aria-label="Primary">
         <a href={resolveHref("#hero")} className="nav-logo">
           {data.logo}
           <span>{data.logoAccent}</span>
         </a>
         <ul className="nav-links">
+          <li className="nav-lens" aria-hidden="true" role="presentation" />
           {links.map((l) => (
             <li key={l.href}>
               <a href={resolveHref(l.href)}>{l.label}</a>
@@ -42,27 +54,47 @@ export default function Nav({ data }: Props) {
           </a>
         )}
         <button
-          aria-label="Open menu"
+          type="button"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="mobile-menu"
           className="hamburger"
-          onClick={() => setOpen(true)}
-          style={{ background: "none", border: "none" }}
+          onClick={() => setOpen((o) => !o)}
         >
-          <span></span>
-          <span></span>
-          <span></span>
+          <span className="bars">
+            <span></span>
+            <span></span>
+          </span>
         </button>
       </nav>
-      <div className={`mobile-menu${open ? " open" : ""}`} aria-hidden={!open}>
-        <button className="mobile-close" onClick={() => setOpen(false)} aria-label="Close menu">
-          ✕
-        </button>
+      <div
+        className={`mobile-scrim${open ? " open" : ""}`}
+        onClick={() => setOpen(false)}
+        aria-hidden="true"
+      />
+      <div
+        id="mobile-menu"
+        className={`mobile-menu glass glass-strong${open ? " open" : ""}`}
+        aria-hidden={!open}
+      >
         {links.map((l) => (
-          <a key={l.href} href={resolveHref(l.href)} onClick={() => setOpen(false)}>
+          <a
+            key={l.href}
+            href={resolveHref(l.href)}
+            onClick={() => setOpen(false)}
+            tabIndex={open ? 0 : -1}
+          >
             {l.label}
+            <span className="chev" aria-hidden="true">›</span>
           </a>
         ))}
         {data.ctaHref && (
-          <a href={resolveHref(data.ctaHref)} onClick={() => setOpen(false)}>
+          <a
+            href={resolveHref(data.ctaHref)}
+            className="mobile-cta"
+            onClick={() => setOpen(false)}
+            tabIndex={open ? 0 : -1}
+          >
             {data.ctaLabel}
           </a>
         )}

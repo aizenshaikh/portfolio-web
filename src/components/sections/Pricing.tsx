@@ -1,4 +1,4 @@
-import SectionTitle from "./SectionTitle";
+import SectionHead from "./SectionHead";
 
 type Plan = {
   name?: string;
@@ -24,55 +24,47 @@ export default function Pricing({ data }: Props) {
   const plans = data.plans || [];
   return (
     <section id="pricing">
-      {data.label && <div className="section-label">{data.label}</div>}
-      <SectionTitle title={data.title} accentLine={data.titleAccentLine} reveal={false} />
-      {data.sub && <p className="pricing-sub">{data.sub}</p>}
-      <div className="pricing-grid">
-        {plans.map((p, i) => (
-          <div
-            key={i}
-            className={`pricing-card reveal${p.featured ? " featured" : ""}`}
-            data-delay={`${i + 1}`}
-          >
-            {p.featured && <div className="pricing-featured-tag">Most Popular</div>}
-            <div className="pricing-name">{p.name}</div>
-            {p.desc && <p className="pricing-desc">{p.desc}</p>}
-            <div className="pricing-price">
-              {p.price}
-              {p.unit && (
-                <span
-                  style={{
-                    fontFamily: "var(--font-sub)",
-                    fontSize: 13,
-                    color: "var(--grey2)",
-                    fontWeight: 400,
-                    marginLeft: 6,
-                  }}
-                >
-                  {p.unit}
-                </span>
+      <div className="shell">
+        <SectionHead
+          label={data.label}
+          title={data.title}
+          accentLine={data.titleAccentLine}
+          body={data.sub}
+          align="center"
+        />
+        <div className="pricing-grid">
+          {plans.map((p, i) => (
+            <article
+              key={i}
+              className={`pricing-card glass specular tilt rv${p.featured ? " featured" : ""}`}
+              data-tilt="3"
+              style={{ "--d": i } as React.CSSProperties}
+            >
+              {p.featured && <div className="pricing-featured-tag">Most Popular</div>}
+              <h3 className="pricing-name">{p.name}</h3>
+              {p.desc && <p className="pricing-desc">{p.desc}</p>}
+              <div className="pricing-price">
+                {p.price}
+                {p.unit && <span className="unit">{p.unit}</span>}
+              </div>
+              {p.features && (
+                <ul className="pricing-features">
+                  {p.features.map((f, j) => (
+                    <li key={j}>
+                      <span className="pricing-check" aria-hidden="true">✓</span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
               )}
-            </div>
-            {p.features && (
-              <ul className="pricing-features">
-                {p.features.map((f, j) => (
-                  <li key={j}>
-                    <span className="pricing-check">✓</span>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {p.ctaHref && (
-              <a
-                href={p.ctaHref}
-                className={p.featured ? "btn-primary" : "btn-outline"}
-              >
-                {p.ctaLabel || "Get In Touch"}
-              </a>
-            )}
-          </div>
-        ))}
+              {p.ctaHref && (
+                <a href={p.ctaHref} className={p.featured ? "btn-primary" : "btn-outline"}>
+                  {p.ctaLabel || "Get In Touch"}
+                </a>
+              )}
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import SectionTitle from "./SectionTitle";
+import SectionHead from "./SectionHead";
 
 type Card = {
   stars?: number;
@@ -20,36 +20,30 @@ export default function Testimonials({ data }: Props) {
   const cards = data.cards || [];
   return (
     <section id="testimonials">
-      <div className="testimonials-inner">
-        {data.label && <div className="section-label reveal">{data.label}</div>}
-        <SectionTitle
-          title={data.title}
-          accentLine={data.titleAccentLine}
-          delay={1}
-        />
+      <div className="shell">
+        <SectionHead label={data.label} title={data.title} accentLine={data.titleAccentLine} />
         <div className="testimonials-grid">
           {cards.map((c, i) => (
-            <div
+            <figure
               key={i}
-              className="testimonial-card reveal"
-              data-delay={`${i + 1}`}
+              className="testimonial-card glass specular tilt rv"
+              data-tilt="3"
+              style={{ "--d": i } as React.CSSProperties}
             >
-              <div className="testimonial-stars">
+              <div className="testimonial-stars" aria-label={`${c.stars || 5} out of 5 stars`}>
                 {Array.from({ length: c.stars || 5 }).map((_, k) => (
-                  <span key={k} className="star">
-                    ★
-                  </span>
+                  <span key={k} aria-hidden="true">★</span>
                 ))}
               </div>
-              {c.quote && <p className="testimonial-quote">{c.quote}</p>}
-              <div className="testimonial-author">
-                <div className="author-avatar">{c.avatar}</div>
+              {c.quote && <blockquote className="testimonial-quote">“{c.quote}”</blockquote>}
+              <figcaption className="testimonial-author">
+                <div className="author-avatar" aria-hidden="true">{c.avatar}</div>
                 <div>
                   <div className="author-name">{c.name}</div>
                   <div className="author-role">{c.role}</div>
                 </div>
-              </div>
-            </div>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>

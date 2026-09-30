@@ -1,4 +1,4 @@
-import SectionTitle from "./SectionTitle";
+import SectionHead from "./SectionHead";
 
 type Tile = { icon?: string; name?: string; color?: string };
 type Props = {
@@ -23,32 +23,43 @@ export default function Platforms({ data }: Props) {
   const tiles = data.tiles || [];
   return (
     <section id="platforms">
-      {data.label && <div className="section-label">{data.label}</div>}
-      <SectionTitle title={data.title} accentLine={data.titleAccentLine} reveal={false} />
-      {data.sub && <p className="platforms-sub">{data.sub}</p>}
-      <div className="platforms-row">
-        {tiles.map((t, i) => {
-          const path = t.icon ? ICON_PATHS[t.icon] : undefined;
-          return (
-            <div
-              key={i}
-              className="platform-tile reveal"
-              data-delay={`${(i % 6) + 1}`}
-              style={{
-                background: `linear-gradient(135deg, ${t.color || "#D6FF3F"}, #0a0a0a)`,
-              }}
-            >
-              {path ? (
-                <svg viewBox="0 0 24 24" width="32" height="32" fill="#fff">
-                  <path d={path} />
-                </svg>
-              ) : (
-                t.icon
-              )}
-              {t.name && <span className="name">{t.name}</span>}
-            </div>
-          );
-        })}
+      <div className="shell">
+        <SectionHead
+          label={data.label}
+          title={data.title}
+          accentLine={data.titleAccentLine}
+          body={data.sub}
+          align="center"
+        />
+        <div className="platforms-row">
+          {tiles.map((t, i) => {
+            const path = t.icon ? ICON_PATHS[t.icon] : undefined;
+            const color = t.color || "#4f7cff";
+            return (
+              <div
+                key={i}
+                className="platform-tile rv"
+                style={{ "--d": i % 6 } as React.CSSProperties}
+              >
+                <div
+                  className="platform-icon"
+                  style={{
+                    background: `linear-gradient(160deg, color-mix(in srgb, ${color} 85%, #fff 15%), color-mix(in srgb, ${color} 55%, #000 45%))`,
+                  }}
+                >
+                  {path ? (
+                    <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
+                      <path d={path} />
+                    </svg>
+                  ) : (
+                    <span aria-hidden="true">{t.icon}</span>
+                  )}
+                </div>
+                {t.name && <span className="name">{t.name}</span>}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import SectionTitle from "./SectionTitle";
+import SectionHead from "./SectionHead";
 
 type Card = {
   bgGradient?: string;
@@ -19,62 +19,69 @@ type Props = {
   };
 };
 
+// "2.4M Views" → big "2.4M", small "Views"; "ROAS 6.8×" → big "6.8×", small "ROAS"
+function splitMetric(r: string) {
+  const tokens = r.trim().split(/\s+/);
+  const idx = tokens.findIndex((t) => /\d/.test(t));
+  if (idx === -1) return { big: r, small: "" };
+  const big = tokens[idx];
+  const small = tokens.filter((_, i) => i !== idx).join(" ");
+  return { big, small };
+}
+
 export default function Projects({ data }: Props) {
   const cards = data.cards || [];
   return (
     <section id="projects">
-      <div className="projects-header">
-        <div>
-          {data.label && <div className="section-label reveal">{data.label}</div>}
-          <SectionTitle
-            title={data.title}
-            accentLine={data.titleAccentLine}
-            delay={1}
-          />
-        </div>
-        {data.body && (
-          <p className="section-body reveal" data-delay="2">
-            {data.body}
-          </p>
-        )}
-      </div>
-      <div className="projects-grid">
-        {cards.map((c, i) => (
-          <div key={i} className="project-card reveal" data-delay={`${i + 1}`}>
-            <div
-              className="project-thumb"
-              style={c.bgGradient ? { background: c.bgGradient } : undefined}
+      <div className="shell">
+        <SectionHead
+          label={data.label}
+          title={data.title}
+          accentLine={data.titleAccentLine}
+          body={data.body}
+          align="split"
+        />
+        <div className="projects-stack">
+          {cards.map((c, i) => (
+            <article
+              key={i}
+              className="project-card glass glass-strong specular"
+              style={{ "--i": i } as React.CSSProperties}
             >
-              {c.bgLabel && <div className="project-thumb-bg">{c.bgLabel}</div>}
-              {c.category && (
-                <span className="project-category-badge">{c.category}</span>
-              )}
-              <div className="project-thumb-overlay">
-                <div className="project-play">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#000">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </div>
+              <div
+                className="project-thumb"
+                style={c.bgGradient ? { background: c.bgGradient } : undefined}
+              >
+                {c.bgLabel && (
+                  <div className="project-thumb-bg" aria-hidden="true">
+                    {c.bgLabel}
+                  </div>
+                )}
+                {c.category && <span className="project-category-badge">{c.category}</span>}
               </div>
-            </div>
-            <div className="project-body">
-              <div className="project-meta">
-                {c.year && <span className="project-year">{c.year}</span>}
-              </div>
-              {c.title && <h3 className="project-title">{c.title}</h3>}
-              {c.desc && <p className="project-desc">{c.desc}</p>}
-              {c.results && (
-                <div className="project-results">
-                  {c.results.map((r, j) => (
-                    <span key={j} className="project-result">
-                      {r}
-                    </span>
-                  ))}
+              <div className="project-body">
+                <div className="project-meta">
+                  {c.year && <span>{c.year}</span>}
                 </div>
-              )}
-            </div>
-          </div>
-        ))}
+                {c.title && <h3 className="project-title">{c.title}</h3>}
+                {c.desc && <p className="project-desc">{c.desc}</p>}
+                {c.results && c.results.length > 0 && (
+                  <div className="project-results">
+                    {c.results.map((r, j) => {
+                      const m = splitMetric(r);
+                      return (
+                        <div key={j} className="project-result">
+                          <b>{m.big}</b>
+                          {m.small && <small>{m.small}</small>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );

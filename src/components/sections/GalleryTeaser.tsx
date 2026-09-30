@@ -16,38 +16,28 @@ export default function GalleryTeaser({ data }: Props) {
   const chips = data.chips || [];
   return (
     <section className="gallery-teaser-section">
-      <div className="gallery-teaser-card">
-        <div>
-          {data.label && <div className="section-label reveal">{data.label}</div>}
-          <SectionTitle
-            title={data.title}
-            accentLine={data.titleAccentLine}
-            delay={1}
-            className="!mb-3"
-          />
-          {data.body && (
-            <p className="section-body reveal" data-delay="2" style={{ maxWidth: 480 }}>
-              {data.body}
-            </p>
-          )}
-        </div>
-        <div className="gallery-teaser-right reveal" data-delay="3">
-          <div className="gallery-chips">
-            {chips.map((c, i) => (
-              <span key={i} className="gallery-chip">
-                {c}
-              </span>
-            ))}
+      <div className="shell">
+        <div className="gallery-teaser-card glass glass-strong specular rv rv-scale">
+          <div className="orb" aria-hidden="true" />
+          <div>
+            {data.label && <div className="section-label">{data.label}</div>}
+            <SectionTitle title={data.title} accentLine={data.titleAccentLine} reveal={false} />
+            {data.body && <p className="section-body">{data.body}</p>}
           </div>
-          {data.ctaHref && (
-            <a
-              href={data.ctaHref}
-              className="btn-primary"
-              style={{ width: "100%", textAlign: "center" }}
-            >
-              {data.ctaLabel}
-            </a>
-          )}
+          <div className="gallery-teaser-right">
+            <div className="gallery-chips">
+              {chips.map((c, i) => (
+                <span key={i} className="gallery-chip">
+                  {c}
+                </span>
+              ))}
+            </div>
+            {data.ctaHref && (
+              <a href={data.ctaHref} className="btn-primary" style={{ width: "100%" }}>
+                {data.ctaLabel}
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </section>

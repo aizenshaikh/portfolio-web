@@ -1,4 +1,4 @@
-import SectionTitle from "./SectionTitle";
+import SectionHead from "./SectionHead";
 
 type Step = { n: string; title: string; desc: string };
 type Props = {
@@ -14,26 +14,23 @@ type Props = {
 export default function Process({ data }: Props) {
   const steps = data.steps || [];
   return (
-    <section id="process">
-      {data.label && <div className="section-label reveal">{data.label}</div>}
-      <SectionTitle
-        title={data.title}
-        accentLine={data.titleAccentLine}
-        delay={1}
-      />
-      {data.body && (
-        <p className="section-body reveal" data-delay="2">
-          {data.body}
-        </p>
-      )}
-      <div className="process-steps">
-        {steps.map((s, i) => (
-          <div key={i} className="process-step reveal" data-delay={`${i + 1}`}>
-            <div className="step-number">{s.n}</div>
-            <h3 className="step-title">{s.title}</h3>
-            <p className="step-desc">{s.desc}</p>
-          </div>
-        ))}
+    <section id="process" data-p>
+      <div className="shell">
+        <SectionHead label={data.label} title={data.title} accentLine={data.titleAccentLine} body={data.body} />
+        <ol className="process-steps">
+          <li className="process-rail" aria-hidden="true" role="presentation" />
+          {steps.map((s, i) => (
+            <li
+              key={i}
+              className="process-step glass specular rv"
+              style={{ "--d": i % 2 } as React.CSSProperties}
+            >
+              <div className="step-number">{s.n}</div>
+              <h3 className="step-title">{s.title}</h3>
+              <p className="step-desc">{s.desc}</p>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );

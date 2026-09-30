@@ -15,17 +15,12 @@ export default function SectionTitle({
 }: Props) {
   if (!title) return null;
   const lines = title.split("\n");
-  const cls = `section-title${reveal ? " reveal" : ""}${className ? " " + className : ""}`;
+  const cls = `section-title${reveal ? " rv" : ""}${className ? " " + className : ""}`;
   return (
-    <h2 className={cls} data-delay={delay}>
+    <h2 className={cls} style={delay ? ({ "--d": delay } as React.CSSProperties) : undefined}>
       {lines.map((line, i) => {
         const isAccent = accentLine ? i === accentLine - 1 : false;
-        return (
-          <span key={i}>
-            {isAccent ? <span className="accent">{line}</span> : line}
-            {i < lines.length - 1 && <br />}
-          </span>
-        );
+        return <span key={i}>{isAccent ? <span className="accent">{line}</span> : line}</span>;
       })}
     </h2>
   );
