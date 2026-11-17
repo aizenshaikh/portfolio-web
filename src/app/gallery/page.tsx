@@ -44,7 +44,6 @@ export default async function GalleryPage() {
           icon: s.icon,
           color: s.color,
           bg: s.bg,
-          emptyCount: s.emptyCount,
           works: s.works.map((w) => ({
             id: w.id,
             title: w.title,

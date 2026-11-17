@@ -20,7 +20,6 @@ type Skill = {
   icon: string;
   color: string;
   bg: string;
-  emptyCount: number;
   works: Work[];
 };
 type PageMeta = {
@@ -48,7 +47,7 @@ export default function GalleryClient({
   const [autoThumbs, setAutoThumbs] = useState<Record<string, string>>({});
 
   const totalAll = useMemo(
-    () => skills.reduce((acc, s) => acc + s.works.length + s.emptyCount, 0),
+    () => skills.reduce((acc, s) => acc + s.works.length, 0),
     [skills]
   );
 
@@ -140,7 +139,7 @@ export default function GalleryClient({
             >
               <span className="dot" style={{ background: s.color }}></span>
               {s.icon} {s.label}
-              <span className="filter-count">{s.works.length + s.emptyCount}</span>
+              <span className="filter-count">{s.works.length}</span>
             </button>
           ))}
         </div>
@@ -172,7 +171,7 @@ export default function GalleryClient({
                     background: `${skill.color}10`,
                   }}
                 >
-                  {skill.works.length + skill.emptyCount} works
+                  {skill.works.length} works
                 </span>
               </div>
             </div>
@@ -268,24 +267,6 @@ export default function GalleryClient({
                   </button>
                 );
               })}
-              {Array.from({ length: skill.emptyCount }).map((_, i) => (
-                <div key={`e-${i}`} className="work-card-empty">
-                  <div className="empty-thumb">
-                    <div
-                      className="empty-plus"
-                      style={{ borderColor: `${skill.color}33` }}
-                    >
-                      +
-                    </div>
-                  </div>
-                  <div className="empty-body">
-                    <div className="empty-label" style={{ color: skill.color }}>
-                      {skill.label} Slot
-                    </div>
-                    <div className="empty-sublabel">Coming soon</div>
-                  </div>
-                </div>
-              ))}
             </div>
           </section>
         ))}
